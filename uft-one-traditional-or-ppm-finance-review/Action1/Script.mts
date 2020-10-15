@@ -1,6 +1,9 @@
 ﻿'===========================================================
 '20201007 - DJ: Initial creation
 '20201014 - DJ: Added missing save step for costs entry
+'20201015 - DJ: Added 10 count loop to wait for the Save button to become disabled after clicking Save
+'				Added minimize to the main window when the pop-up window is spawned
+'				Added maximize to the main window when the pop-up window is closed
 '===========================================================
 
 '===========================================================
@@ -86,6 +89,7 @@ PPMProposalSearch "Finance Review", "Approved"
 '===========================================================================================
 Browser("Search Requests").Page("Req Details").Link("Proposal Name Link").Click
 AppContext.Sync																				'Wait for the browser to stop spinning
+AppContext.Minimize
 
 '===========================================================================================
 'BP:  Maximize the popup window
@@ -154,7 +158,17 @@ Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("Contractor")
 '===========================================================================================
 Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").Click
 AppContext2.Sync																				'Wait for the browser to stop spinning
-Browser("Create a Blank Staffing").Page("Edit Costs_4").WebElement("Cost updated successfully.").Click
+Counter = 0
+Do
+	Counter = Counter + 1
+	wait(1)
+	print Counter & " " & Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").GetROProperty("class")
+	print PropValue
+	If Counter >=10 Then
+		Reporter.ReportEvent micFail, "Click the Save button", "The Save button didn't become disabled within " & Counter & " evaluation attempts."
+		Exit Do
+	End If	
+Loop Until Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").GetROProperty("class") = "btn-disable fs-header-button"
 AppContext2.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
@@ -166,6 +180,7 @@ Browser("Create a Blank Staffing").Page("Edit Costs_2").WebButton("Done").Click
 'BP:  Close the popup window
 '===========================================================================================
 AppContext2.Close																			'Close the application at the end of your script
+AppContext.Maximize
 
 '===========================================================================================
 'BP:  Click the Save text
