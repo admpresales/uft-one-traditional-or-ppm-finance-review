@@ -1,5 +1,6 @@
 ﻿'===========================================================
 '20201007 - DJ: Initial creation
+'20201014 - DJ: Added missing save step for costs entry
 '===========================================================
 
 '===========================================================
@@ -147,6 +148,14 @@ Browser("Create a Blank Staffing").Page("Edit Costs_2").Frame("CopyCostsDialog")
 Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("0.000").Click
 Window("Edit Costs").Type "100" @@ hightlight id_;_1771790_;_script infofile_;_ZIP::ssf2.xml_;_
 Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("Contractor").Click
+
+'===========================================================================================
+'BP:  Click the Save button
+'===========================================================================================
+Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").Click
+AppContext2.Sync																				'Wait for the browser to stop spinning
+Browser("Create a Blank Staffing").Page("Edit Costs_4").WebElement("Cost updated successfully.").Click
+AppContext2.Sync																				'Wait for the browser to stop spinning
 
 '===========================================================================================
 'BP:  Click the Done button, detection improvement submitted.
