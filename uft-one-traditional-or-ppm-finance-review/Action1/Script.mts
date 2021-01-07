@@ -5,6 +5,7 @@
 '				Added minimize to the main window when the pop-up window is spawned
 '				Added maximize to the main window when the pop-up window is closed
 '20210107 - DJ: Added selecting the Fiscal Year to ensure that you can see the costs copied from the other project
+'20210107 - DJ: Modified the Fiscal Year selection to make sure it accurately selected the value.
 '===========================================================
 
 '===========================================================
@@ -150,8 +151,10 @@ Browser("Create a Blank Staffing").Page("Edit Costs_2").Frame("CopyCostsDialog")
 '===========================================================================================
 'BP:  Select the Fiscal Year 2020 from the Fiscal Year combobox
 '===========================================================================================
-Browser("Create a Blank Staffing").Page("Edit Costs_5").WebList("select").Select DataTable.Value("FiscalYear")
-AppContext2.Sync
+Do
+	Browser("Create a Blank Staffing").Page("Edit Costs_5").WebList("select").Select DataTable.Value("FiscalYear")
+	AppContext2.Sync
+Loop Until Browser("Create a Blank Staffing").Page("Edit Costs_5").WebList("select").GetROProperty("Value") = DataTable.Value("FiscalYear")
 
 '===========================================================================================
 'BP:  Click the first 0.00 field and type 100
