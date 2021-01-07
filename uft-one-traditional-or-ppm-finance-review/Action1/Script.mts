@@ -4,6 +4,7 @@
 '20201015 - DJ: Added 10 count loop to wait for the Save button to become disabled after clicking Save
 '				Added minimize to the main window when the pop-up window is spawned
 '				Added maximize to the main window when the pop-up window is closed
+'20210107 - DJ: Added selecting the Fiscal Year to ensure that you can see the costs copied from the other project
 '===========================================================
 
 '===========================================================
@@ -145,6 +146,12 @@ Browser("Create a Blank Staffing").Page("Edit Costs_3").Frame("copyCostLinesFSSe
 'BP:  Click the Copy Copy button, detection improvement submitted.
 '===========================================================================================
 Browser("Create a Blank Staffing").Page("Edit Costs_2").Frame("CopyCostsDialog").WebButton("CopyButton").Click
+
+'===========================================================================================
+'BP:  Select the Fiscal Year 2020 from the Fiscal Year combobox
+'===========================================================================================
+Browser("Create a Blank Staffing").Page("Edit Costs_5").WebList("select").Select DataTable.Value("FiscalYear")
+AppContext2.Sync
 
 '===========================================================================================
 'BP:  Click the first 0.00 field and type 100
