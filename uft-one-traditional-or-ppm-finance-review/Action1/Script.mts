@@ -6,6 +6,7 @@
 '				Added maximize to the main window when the pop-up window is closed
 '20210107 - DJ: Added selecting the Fiscal Year to ensure that you can see the costs copied from the other project
 '20210107 - DJ: Modified the Fiscal Year selection to make sure it accurately selected the value.
+'20210113 - DJ: Modified the fiscal year parameter to be 2021, in 9.63 container the time machine has been run. This version will FAIL in 9.62.
 '===========================================================
 
 '===========================================================
