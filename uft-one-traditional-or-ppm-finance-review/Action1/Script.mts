@@ -9,6 +9,7 @@
 '20210113 - DJ: Modified the fiscal year parameter to be 2021, in 9.63 container the time machine has been run. This version will FAIL in 9.62.
 '20210115 - DJ: Turned off smart identification for run sessions.
 '20210115 - DJ: Updated Copy Costs Button object properties due to changes in 9.63
+'20210116 - DJ: Added synchronization statement for Aggrid costs element, sometimes UFT executes too fast for PPM
 '===========================================================
 
 '===========================================================
@@ -53,7 +54,7 @@ Function PPMProposalSearch (CurrentStatus, NextAction)
 	
 End Function
 
-Dim BrowserExecutable, Counter, mySendKeys
+Dim BrowserExecutable, Counter, mySendKeys, rc
 
 While Browser("CreationTime:=0").Exist(0)   												'Loop to close all open browsers
 	Browser("CreationTime:=0").Close 
@@ -162,6 +163,7 @@ Loop Until Browser("Create a Blank Staffing").Page("Edit Costs_5").WebList("sele
 '===========================================================================================
 'BP:  Click the first 0.00 field and type 100
 '===========================================================================================
+rc = Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("0.000").Exist
 Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("0.000").Click
 Window("Edit Costs").Type "100" @@ hightlight id_;_1771790_;_script infofile_;_ZIP::ssf2.xml_;_
 Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("Contractor").Click
