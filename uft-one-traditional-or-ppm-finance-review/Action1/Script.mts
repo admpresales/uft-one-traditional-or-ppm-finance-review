@@ -8,6 +8,7 @@
 '20210107 - DJ: Modified the Fiscal Year selection to make sure it accurately selected the value.
 '20210113 - DJ: Modified the fiscal year parameter to be 2021, in 9.63 container the time machine has been run. This version will FAIL in 9.62.
 '20210115 - DJ: Turned off smart identification for run sessions.
+'20210115 - DJ: Updated Copy Costs Button object properties due to changes in 9.63
 '===========================================================
 
 '===========================================================
