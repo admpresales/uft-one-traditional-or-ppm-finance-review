@@ -10,6 +10,7 @@
 '20210115 - DJ: Turned off smart identification for run sessions.
 '20210115 - DJ: Updated Copy Costs Button object properties due to changes in 9.63
 '20210116 - DJ: Added synchronization statement for Aggrid costs element, sometimes UFT executes too fast for PPM
+'20210119 - DJ: Updated to avoid using the generic type command, editing the resource type instead, added logic to make sure it made the change.
 '===========================================================
 
 '===========================================================
@@ -127,7 +128,7 @@ AppContext2.Sync																				'Wait for the browser to stop spinning
 Browser("Create a Blank Staffing").Page("Edit Costs_3").Frame("copyCostLinesFSSearchDialogIF").WebRadioGroup("Import Type Radio Button Group").Select "Project"
 
 '===========================================================================================
-'BP:  Type Web for One World into the Include Project text bos
+'BP:  Type Web for One World into the Include Project text box
 '===========================================================================================
 Browser("Create a Blank Staffing").Page("Edit Costs_3").Frame("copyCostLinesFSSearchDialogIF").WebEdit("Project Name Text Box").Set "Web for One World"
 
@@ -161,12 +162,41 @@ Do
 Loop Until Browser("Create a Blank Staffing").Page("Edit Costs_5").WebList("select").GetROProperty("Value") = DataTable.Value("FiscalYear")
 
 '===========================================================================================
-'BP:  Click the first 0.00 field and type 100
+'BP:  Edit the category
 '===========================================================================================
-rc = Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("0.000").Exist
-Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("0.000").Click
-Window("Edit Costs").Type "100" @@ hightlight id_;_1771790_;_script infofile_;_ZIP::ssf2.xml_;_
-Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("Contractor").Click
+Counter = 0
+Do
+	Counter = Counter + 1
+	rc = Browser("Create a Blank Staffing").Page("Edit Costs_4").WebElement("0.000").Exist
+	Browser("Create a Blank Staffing").Page("Edit Costs_4").WebElement("WebElement").Click
+	Browser("Create a Blank Staffing").Page("Edit Costs_4").Frame("editCostLineDialogIF_2").WebEdit("newCategory").Set "Consultant" @@ script infofile_;_ZIP::ssf11.xml_;_
+	Browser("Create a Blank Staffing").Page("Edit Costs_4").Frame("editCostLineDialogIF_2").WebButton("OK Button").Click
+	Browser("Create a Blank Staffing").Page("Edit Costs_3").WebElement("Consultant").Click
+'===========================================================================================
+'Tech:  These two statements help in troubleshooting to determine what property we want to exit the loop on
+'===========================================================================================
+'	Set rcRO = Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").GetAllROProperties
+'	NumberOfProperties = rcRO.Count
+'	For i = 0 To NumberOfProperties - 1
+'    		Print "RO: " & rcRO(i).Name & ": " & rcRO(i).Value
+'	Next
+'	Set rcTO = Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").GetTOProperties
+'	NumberOfProperties = rcTO.Count
+'	For i = 0 To NumberOfProperties - 1
+'    		Print "TO: " & rcTO(i).Name & ": " & rcTO(i).Value
+'	Next
+	If Counter >= 5 Then
+		Reporter.ReportEvent micFail, "Creating Staffing Profile", "The Save Button didn't become Enabled within " & Counter & " attempts to set the custom value, aborting"
+		Browser("Search Requests").Page("Req Details").WebElement("menuUserIcon").Click
+		AppContext.Sync																				'Wait for the browser to stop spinning
+		Browser("Search Requests").Page("Req Details").Link("Sign Out").Click
+		AppContext.Sync																				'Wait for the browser to stop spinning
+		While Browser("CreationTime:=0").Exist(0)   												'Loop to close all open browsers
+			Browser("CreationTime:=0").Close 
+		Wend
+		ExitAction
+	End If
+Loop Until Browser("Create a Blank Staffing").Page("Edit Costs_4").WebButton("Save").GetROProperty("disabled") = 0
 
 '===========================================================================================
 'BP:  Click the Save button
